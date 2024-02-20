@@ -1,13 +1,19 @@
 class ProductPage:
     def __init__(self, page):
         self.page = page
-        self.sport_diet_category = page.locator('//div[@class="taxonomy-card_title__vBWel"]//a[@title="Sport- en dieetvoeding"]')
-        self.bakery_category = page.get_by_text('Bakkerij en banket')
+        self.show_more_results_button = page.locator("//button[@data-testhook='load-more']")
 
-    def click_on_sport_dieet_category(self):
-        self.sport_diet_category.click()
+    def click_on_category(self, category):
+        self.page.get_by_role("link", name=category).first.click()
 
+    def show_more_results(self):
+        self.show_more_results_button.click()
 
-    def click_on_bakery_category(self):
-        self.bakery_category.click()
+    def select_product(self, product):
+        get_product = self.page.locator(f"//span[text()='{product}']")
 
+        if get_product.is_hidden():
+            ProductPage.show_more_results(self)
+            get_product.click()
+        else:
+            get_product.click()

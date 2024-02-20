@@ -1,32 +1,37 @@
-from ...resources.pageObjects.HomePage import HomePage
 from ...resources.pageObjects.ProductPage import ProductPage
-from ...resources.pageObjects.SportDietProductPage import SportDietProductPage
-from ...resources.pageObjects.FilterProductPage import FilterProductPage
+from ...resources.pageObjects.HomePage import HomePage
+from ...resources.pageObjects.ProductFilterSidebar import ProductFilterSideBar
+from ...resources.pageObjects.ProductDetailsPage import ProductDetailsPage
+from ...resources.pageObjects.ShoppingCart import ShoppingCart
+from playwright.sync_api import expect
+
 import pytest
 
 
 # @pytest.mark.skip_browser("chromium")  # for skipping declared browser annotation
 # @pytest.mark.only_browser("firefox")  # for running only in 1 type of browser annotation
 @pytest.mark.smoke
-def test_select_product_navbar_sport(set_up):
+@pytest.mark.parametrize("category, brand , product_name", [
+    ("Frisdrank, sappen, koffie, thee", "Starbucks", "Starbucks Single-origin Colombia koffiebonen")])
+def test_select_product_navbar(set_up, category, brand, product_name):
     page = set_up
     homepage = HomePage(page)
-    productpage = ProductPage(page)
-    sportdietpage = SportDietProductPage(page)
-    filterproductpage = FilterProductPage(page)
-
-    homepage.validate_homepage_is_landed()
-
-    if homepage.accept_cookie_button.is_visible():
-        homepage.accept_cookies()
+    product_page = ProductPage(page)
+    product_details = ProductDetailsPage(page)
+    product_filter_sidebar = ProductFilterSideBar(page)
+    shopping_cart = ShoppingCart(page)
 
     homepage.click_on_products_navbar()
-    productpage.click_on_sport_dieet_category()
+    product_page.click_on_category(category)
 
-    # filter based on nutriscore
-    sportdietpage.select_relevance_dropdown_nutriscore()
+    # filtering sidebar on product page
+    product_filter_sidebar.click_on_brand(brand)
 
-    # select body and fit from filter dropdown
-    sportdietpage.click_on_filter()
-    filterproductpage.click_on_body_fit()
-    filterproductpage.click_show_products_button()
+    # select product and add to cart
+    product_page.select_product(product_name)
+    product_details.validate_product_title(product_name)
+    product_details.add_product_to_cart()
+
+    # validate product is added to shopping cart
+    expect(shopping_cart.shopping_cart_navbar).not_to_have_text("0.00")
+
