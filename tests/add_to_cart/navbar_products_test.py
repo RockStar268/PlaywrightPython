@@ -13,12 +13,12 @@ import pytest
 @pytest.mark.smoke
 @pytest.mark.parametrize("category, brand , product_name", [
     ("Frisdrank, sappen, koffie, thee", "Starbucks", "Starbucks Single-origin Colombia koffiebonen")])
-def test_select_product_navbar(set_up, category, brand, product_name):
+def test_select_category_navbar(set_up, category, brand, product_name):
     page = set_up
     homepage = HomePage(page)
     product_page = ProductPage(page)
-    product_details = ProductDetailsPage(page)
     product_filter_sidebar = ProductFilterSideBar(page)
+    product_details = ProductDetailsPage(page)
     shopping_cart = ShoppingCart(page)
 
     homepage.click_on_products_navbar()
@@ -34,4 +34,3 @@ def test_select_product_navbar(set_up, category, brand, product_name):
 
     # validate product is added to shopping cart
     expect(shopping_cart.shopping_cart_navbar).not_to_have_text("0.00")
-
