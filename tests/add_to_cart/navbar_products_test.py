@@ -1,5 +1,5 @@
 from ...resources.pageObjects.ProductPage import ProductPage
-from ...resources.pageObjects.HomePage import HomePage
+from ...resources.pageObjects.Navbar import Navbar
 from ...resources.pageObjects.ProductFilterSidebar import ProductFilterSideBar
 from ...resources.pageObjects.ProductDetailsPage import ProductDetailsPage
 from ...resources.pageObjects.ShoppingCart import ShoppingCart
@@ -15,13 +15,13 @@ import pytest
     ("Frisdrank, sappen, koffie, thee", "Starbucks", "Starbucks Single-origin Colombia koffiebonen")])
 def test_select_category_navbar(set_up, category, brand, product_name):
     page = set_up
-    homepage = HomePage(page)
+    navbar = Navbar(page)
     product_page = ProductPage(page)
     product_filter_sidebar = ProductFilterSideBar(page)
     product_details = ProductDetailsPage(page)
     shopping_cart = ShoppingCart(page)
 
-    homepage.click_on_products_navbar()
+    navbar.click_on_products()
     product_page.click_on_category(category)
 
     # filtering sidebar on product page

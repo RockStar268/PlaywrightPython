@@ -15,6 +15,7 @@ def create_browser_context(browser) -> None:
     yield context
     browser.close()
 
+
 @pytest.fixture()
 def set_up(create_browser_context, browser) -> None:
     context = browser.new_context(
